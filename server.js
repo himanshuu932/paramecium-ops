@@ -79,7 +79,8 @@ app.post('/verify', async (req, res) => {
         res.json({
             success: true,
             message: "SYSTEM_ULOCKED. WELCOME, WHITE_HAT.",
-            flag: "bug found{template_injection_in_env_files}",
+            flag: "BUG_FOUND{template_injection_in_env_files}",
+            redirect: "https://bug-hunt-manager-tau.vercel.app/dashboard",
             backendSync: syncResult
         });
     } else {

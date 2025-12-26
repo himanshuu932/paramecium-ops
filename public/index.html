@@ -418,7 +418,21 @@
                     <h3>ACCESS GRANTED</h3>
                     <p>${data.message}</p>
                     <p>FLAG: ${data.flag}</p>
+                    ${data.redirect ? `<p style="margin-top:10px; color:var(--term-green)">🔄 Redirecting to dashboard in <span id="countdown">3</span> seconds...</p>` : ''}
                 </div>`;
+
+                    if (data.redirect) {
+                        let seconds = 3;
+                        const interval = setInterval(() => {
+                            seconds--;
+                            const el = document.getElementById('countdown');
+                            if (el) el.textContent = seconds;
+                            if (seconds <= 0) {
+                                clearInterval(interval);
+                                window.location.href = data.redirect;
+                            }
+                        }, 1000);
+                    }
                 } else {
                     output.innerHTML = `<span style="color:red">[DENIED] ${data.message}</span>`;
                 }
