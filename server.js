@@ -82,4 +82,15 @@ app.listen(PORT, () => {
     console.log(`Paramecium Ops Challenge running on port ${PORT}`);
     console.log(`Multi-user support: ENABLED (stateless design)`);
     console.log(`Ping endpoint: /ping`);
+
+    // Self-ping every 10 minutes to keep Render alive
+    const PING_INTERVAL = 10 * 60 * 1000; // 10 minutes
+    setInterval(() => {
+        const url = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+        fetch(`${url}/ping`)
+            .then(res => res.json())
+            .then(data => console.log(`[KEEP-ALIVE] Pinged at ${data.timestamp}`))
+            .catch(err => console.log(`[KEEP-ALIVE] Ping failed: ${err.message}`));
+    }, PING_INTERVAL);
+    console.log(`[KEEP-ALIVE] Self-ping enabled every 10 minutes`);
 });
