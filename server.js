@@ -68,8 +68,18 @@ app.post('/verify', (req, res) => {
         });
     }
 });
+// 3. Ping Endpoint (Keep Render alive)
+app.get('/ping', (req, res) => {
+    res.json({ status: 'alive', timestamp: new Date().toISOString() });
+});
+
+// 4. Health Check
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', uptime: process.uptime() });
+});
 
 app.listen(PORT, () => {
-    console.log(`Corporate Printer Service running on http://localhost:${PORT}`);
-    console.log(`Keep this window open to see server logs.`);
+    console.log(`Paramecium Ops Challenge running on port ${PORT}`);
+    console.log(`Multi-user support: ENABLED (stateless design)`);
+    console.log(`Ping endpoint: /ping`);
 });
