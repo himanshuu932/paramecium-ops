@@ -365,6 +365,19 @@
         // XSS Prevention: Output is HTML-encoded
         // SQL Injection: Parameterized queries used
 
+        // Handle teamcode from URL params
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const teamcode = params.get("teamcode");
+            if (teamcode) {
+                localStorage.setItem("teamcode", teamcode);
+                params.delete("teamcode");
+                const cleanURL = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
+                window.history.replaceState({}, document.title, cleanURL);
+                console.log("Teamcode saved:", teamcode);
+            }
+        });
+
         document.getElementById('preview-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const output = document.getElementById('preview-output');
@@ -391,11 +404,13 @@
             const output = document.getElementById('verify-output');
             output.textContent = '...Verifying...';
             const code = document.getElementById('codeword').value;
+            const teamcode = localStorage.getItem('teamcode') || '382045158047';
+
             try {
                 const res = await fetch('/verify', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `code=${encodeURIComponent(code)}`
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, teamcode })
                 });
                 const data = await res.json();
                 if (data.success) {
